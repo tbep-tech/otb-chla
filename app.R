@@ -11,7 +11,6 @@ ui <- page_navbar(
     version = 5,
     primary = "#1e806e",
     secondary = "#035172",
-    base_font = font_google("Inter"),
     bg = "#f5f5f5",
     fg = "#5c524f"
   ),
@@ -160,7 +159,8 @@ ui <- page_navbar(
         )
       )
     )
-  )
+  ),
+  
 
 )
 
@@ -324,7 +324,8 @@ server <- function(input, output, session) {
             width = 2,
             value = threshold,
             dashStyle = "Dash",
-            label = list(text = paste("Threshold:", threshold, "μg/L"), style = list(color = "#d9534f", fontWeight = "bold"))
+            label = list(text = paste("Threshold:", threshold, "μg/L"), 
+                        style = list(color = "#d9534f", fontWeight = "bold"))
           )
         )
       ) %>%
@@ -393,7 +394,8 @@ server <- function(input, output, session) {
             width = 2,
             value = threshold,
             dashStyle = "Dash",
-            label = list(text = paste("Threshold:", threshold, "μg/L"), style = list(color = "#d9534f", fontWeight = "bold"))
+            label = list(text = paste("Threshold:", threshold, "μg/L"), 
+                        style = list(color = "#d9534f", fontWeight = "bold"))
           )
         )
       ) %>%
@@ -434,7 +436,8 @@ server <- function(input, output, session) {
             width = 2,
             value = threshold,
             dashStyle = "Dash",
-            label = list(text = paste("Threshold:", threshold, "μg/L"), style = list(color = "#d9534f", fontWeight = "bold"))
+            label = list(text = paste("Threshold:", threshold, "μg/L"), 
+                        style = list(color = "#d9534f", fontWeight = "bold"))
           )
         )
       ) %>%
@@ -503,7 +506,8 @@ server <- function(input, output, session) {
             width = 2,
             value = threshold,
             dashStyle = "Dash",
-            label = list(text = paste("Threshold:", threshold, "μg/L"), style = list(color = "#d9534f", fontWeight = "bold"))
+            label = list(text = paste("Threshold:", threshold, "μg/L"), 
+                        style = list(color = "#d9534f", fontWeight = "bold"))
           )
         )
       ) %>%
