@@ -4,6 +4,9 @@ library(highcharter)
 library(dplyr)
 library(bsicons)
 
+load("data/hisdat.RData")
+load("data/curdat.RData")
+
 # Define UI
 ui <- page_navbar(
   title = "Old Tampa Bay Chlorophyll-a Dashboard",
@@ -18,7 +21,7 @@ ui <- page_navbar(
   nav_item(
     tags$img(src = "tarponlogo.png", height = "30px", style = "margin-right: 10px;")
   ),
-  
+
   # NW Subsegment tab
   nav_panel(
     title = "NW Subsegment",
@@ -172,28 +175,15 @@ server <- function(input, output, session) {
   # Define thresholds
   thresholds <- list(NW = 11.3, CW = 13.8)
   
-  # Five-year historical averages
-  historical_avg <- data.frame(
-    Month = month.abb,
-    NW = c(8.2, 7.8, 8.5, 9.2, 10.1, 11.5, 12.3, 11.8, 10.9, 10.2, 9.1, 8.4),
-    CW = c(9.5, 9.1, 9.8, 10.5, 11.2, 13.0, 14.1, 13.5, 12.4, 11.6, 10.3, 9.7)
-  )
-  
-  # Current year data (example data with some missing values)
-  current_data <- list(
-    NW = c(7.9, 7.5, 8.1, 9.0, 9.8, 10.8, 11.9, NA, NA, NA, NA, NA),
-    CW = c(9.2, 8.9, 9.5, 10.2, 10.9, 12.5, 13.8, NA, NA, NA, NA, NA)
-  )
-  
   # Calculate June-October average
   calc_seasonal_avg <- function(segment) {
     june_oct_idx <- 6:10
     
     values <- sapply(june_oct_idx, function(i) {
-      if (is.na(current_data[[segment]][i])) {
-        historical_avg[[segment]][i]
+      if (is.na(curdat[[segment]][i])) {
+        hisdat[[segment]][i]
       } else {
-        current_data[[segment]][i]
+        curdat[[segment]][i]
       }
     })
     
@@ -205,7 +195,7 @@ server <- function(input, output, session) {
     june_oct_idx <- 6:10
     threshold <- thresholds[[segment]]
     
-    actual_values <- current_data[[segment]][june_oct_idx]
+    actual_values <- curdat[[segment]][june_oct_idx]
     actual_sum <- sum(actual_values, na.rm = TRUE)
     remaining_count <- sum(is.na(actual_values))
     
@@ -222,7 +212,7 @@ server <- function(input, output, session) {
   # Calculate remaining months
   calc_remaining_months <- function(segment) {
     june_oct_idx <- 6:10
-    sum(is.na(current_data[[segment]][june_oct_idx]))
+    sum(is.na(curdat[[segment]][june_oct_idx]))
   }
   
   # NW Value box outputs
@@ -311,9 +301,9 @@ server <- function(input, output, session) {
     threshold <- thresholds[[segment]]
     
     # Prepare data
-    actual_data <- current_data[[segment]]
-    projected_data <- ifelse(is.na(actual_data), historical_avg[[segment]], NA)
-    historical_data <- historical_avg[[segment]]
+    actual_data <- curdat[[segment]]
+    projected_data <- ifelse(is.na(actual_data), hisdat[[segment]], NA)
+    historical_data <- hisdat[[segment]]
     
     highchart() %>%
       hc_chart(type = "line") %>%
@@ -370,15 +360,15 @@ server <- function(input, output, session) {
     june_oct_idx <- 6:10
     
     seasonal_data <- sapply(june_oct_idx, function(i) {
-      if (is.na(current_data[[segment]][i])) {
-        historical_avg[[segment]][i]
+      if (is.na(curdat[[segment]][i])) {
+        hisdat[[segment]][i]
       } else {
-        current_data[[segment]][i]
+        curdat[[segment]][i]
       }
     })
     
     colors <- sapply(june_oct_idx, function(i) {
-      if (is.na(current_data[[segment]][i])) {
+      if (is.na(curdat[[segment]][i])) {
         "#d9d9d9"  # Projected
       } else {
         "#1e806e"  # Actual
@@ -423,9 +413,9 @@ server <- function(input, output, session) {
     threshold <- thresholds[[segment]]
     
     # Prepare data
-    actual_data <- current_data[[segment]]
-    projected_data <- ifelse(is.na(actual_data), historical_avg[[segment]], NA)
-    historical_data <- historical_avg[[segment]]
+    actual_data <- curdat[[segment]]
+    projected_data <- ifelse(is.na(actual_data), hisdat[[segment]], NA)
+    historical_data <- hisdat[[segment]]
     
     highchart() %>%
       hc_chart(type = "line") %>%
@@ -482,15 +472,15 @@ server <- function(input, output, session) {
     june_oct_idx <- 6:10
     
     seasonal_data <- sapply(june_oct_idx, function(i) {
-      if (is.na(current_data[[segment]][i])) {
-        historical_avg[[segment]][i]
+      if (is.na(curdat[[segment]][i])) {
+        hisdat[[segment]][i]
       } else {
-        current_data[[segment]][i]
+        curdat[[segment]][i]
       }
     })
     
     colors <- sapply(june_oct_idx, function(i) {
-      if (is.na(current_data[[segment]][i])) {
+      if (is.na(curdat[[segment]][i])) {
         "#d9d9d9"  # Projected
       } else {
         "#1e806e"  # Actual
