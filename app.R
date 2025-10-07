@@ -15,10 +15,13 @@ ui <- page_navbar(
     fg = "#5c524f"
   ),
   
+  nav_item(
+    tags$img(src = "tarponlogo.png", height = "30px", style = "margin-right: 10px;")
+  ),
+  
   # NW Subsegment tab
   nav_panel(
     title = "NW Subsegment",
-    icon = bs_icon("droplet-fill"),
     value = "NW",
     
     layout_columns(
@@ -91,7 +94,6 @@ ui <- page_navbar(
   # CW Subsegment tab
   nav_panel(
     title = "CW Subsegment",
-    icon = bs_icon("droplet-fill"),
     value = "CW",
     
     layout_columns(
