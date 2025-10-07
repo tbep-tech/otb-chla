@@ -4,8 +4,12 @@ library(highcharter)
 library(dplyr)
 library(bsicons)
 
-load("data/hisdat.RData")
-load("data/curdat.RData")
+load("data/epcchl.RData")
+load("data/prob.RData")
+
+sumdat <- datsum(epcchl)
+hisdat <- sumdat$hisdat
+curdat <- sumdat$curdat
 
 # Define UI
 ui <- page_navbar(
@@ -21,7 +25,7 @@ ui <- page_navbar(
   nav_item(
     tags$img(src = "tarponlogo.png", height = "30px", style = "margin-right: 10px;")
   ),
-
+  
   # NW Subsegment tab
   nav_panel(
     title = "NW Subsegment",
@@ -68,6 +72,14 @@ ui <- page_navbar(
           showcase = bs_icon("exclamation-triangle"),
           theme = "warning",
           textOutput("nw_max_allowable_subtitle")
+        ),
+        
+        value_box(
+          title = "Probability of Exceedance",
+          value = textOutput("nw_prob_value"),
+          showcase = bs_icon("percent"),
+          theme = "danger",
+          p("chance of exceeding threshold")
         )
       ),
       
@@ -140,6 +152,14 @@ ui <- page_navbar(
           showcase = bs_icon("exclamation-triangle"),
           theme = "warning",
           textOutput("cw_max_allowable_subtitle")
+        ),
+        
+        value_box(
+          title = "Probability of Exceedance",
+          value = textOutput("cw_prob_value"),
+          showcase = bs_icon("percent"),
+          theme = "danger",
+          p("chance of exceeding threshold")
         )
       ),
       
@@ -255,6 +275,11 @@ server <- function(input, output, session) {
     }
   })
   
+  output$nw_prob_value <- renderText({
+    prob_val <- prob$prob[prob$subsegment == "NW"]
+    sprintf("%.1f%%", prob_val)
+  })
+  
   # CW Value box outputs
   output$cw_avg_value <- renderText({
     sprintf("%.2f μg/L", calc_seasonal_avg("CW"))
@@ -293,6 +318,11 @@ server <- function(input, output, session) {
     } else {
       "Cannot meet threshold"
     }
+  })
+  
+  output$cw_prob_value <- renderText({
+    prob_val <- prob$prob[prob$subsegment == "CW"]
+    sprintf("%.1f%%", prob_val)
   })
   
   # NW Monthly plot
