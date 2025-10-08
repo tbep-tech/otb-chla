@@ -38,18 +38,13 @@ ui <- page_navbar(
       layout_columns(
         col_widths = 12,
         
-        card(
-          card_header(
-            class = "bg-primary text-white",
-            "Target Threshold"
-          ),
-          card_body(
-            class = "text-center",
-            h2("11.3 μg/L", style = "color: #1e806e; margin-bottom: 0;"),
-            p("June-October Average Target", class = "text-muted")
-          )
+        value_box(
+          title = tags$span("Target Threshold", style = "color: #1e806e;"),
+          value = tags$span("11.3 μg/L", style = "color: #1e806e;"),
+          showcase = tags$div(bs_icon("bullseye"), style = "color: #1e806e;"),
+          tags$p("June-October Average Target", style = "color: #1e806e;")
         ),
-        
+
         value_box(
           title = "Jun-Oct Projected Average",
           value = textOutput("nw_avg_value"),
@@ -118,16 +113,11 @@ ui <- page_navbar(
       layout_columns(
         col_widths = 12,
         
-        card(
-          card_header(
-            class = "bg-primary text-white",
-            "Target Threshold"
-          ),
-          card_body(
-            class = "text-center",
-            h2("13.8 μg/L", style = "color: #1e806e; margin-bottom: 0;"),
-            p("June-October Average Target", class = "text-muted")
-          )
+        value_box(
+          title = tags$span("Target Threshold", style = "color: #1e806e;"),
+          value = tags$span("13.8 μg/L", style = "color: #1e806e;"),
+          showcase = tags$div(bs_icon("bullseye"), style = "color: #1e806e;"),
+          tags$p("June-October Average Target", style = "color: #1e806e;")
         ),
         
         value_box(
