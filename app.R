@@ -13,7 +13,7 @@ curdat <- sumdat$curdat
 
 # Define UI
 ui <- page_navbar(
-  title = "Old Tampa Bay Chlorophyll-a Dashboard",
+  title = "Old Tampa Bay Seasonal, Subsegment Chlorophyll-a Targets",
   theme = bs_theme(
     version = 5,
     primary = "#1e806e",
