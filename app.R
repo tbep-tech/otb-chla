@@ -51,7 +51,7 @@ ui <- page_navbar(
         ),
         
         value_box(
-          title = "Jun-Oct Average",
+          title = "Jun-Oct Projected Average",
           value = textOutput("nw_avg_value"),
           showcase = bs_icon("graph-up"),
           theme = "primary",
@@ -131,7 +131,7 @@ ui <- page_navbar(
         ),
         
         value_box(
-          title = "Jun-Oct Average",
+          title = "Jun-Oct Projected Average",
           value = textOutput("cw_avg_value"),
           showcase = bs_icon("graph-up"),
           theme = "primary",
