@@ -10,10 +10,11 @@ load("data/prob.RData")
 sumdat <- datsum(epcchl)
 hisdat <- sumdat$hisdat
 curdat <- sumdat$curdat
+maxyr <- max(epcchl$yr)
 
 # Define UI
 ui <- page_navbar(
-  title = "Old Tampa Bay Seasonal, Subsegment Chlorophyll-a Targets",
+  title = paste(maxyr, "Old Tampa Bay Seasonal, Subsegment Chlorophyll-a Targets"),
   theme = bs_theme(
     version = 5,
     primary = "#1e806e",
