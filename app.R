@@ -4,8 +4,11 @@ library(highcharter)
 library(dplyr)
 library(bsicons)
 
+options(bslib.color_contrast_warnings = FALSE)
+
 load("data/epcchl.RData")
 load("data/prob.RData")
+load("data/mnest.RData")
 
 sumdat <- datsum(epcchl)
 hisdat <- sumdat$hisdat
@@ -175,7 +178,7 @@ ui <- page_navbar(
         )
       )
     )
-  ),
+  )
   
 
 )
@@ -192,7 +195,9 @@ server <- function(input, output, session) {
     
     values <- sapply(june_oct_idx, function(i) {
       if (is.na(curdat[[segment]][i])) {
-        hisdat[[segment]][i]
+        mnest %>% 
+          filter(subsegment == segment, Month == i) %>% 
+          pull(mn)
       } else {
         curdat[[segment]][i]
       }
@@ -372,22 +377,26 @@ server <- function(input, output, session) {
     threshold <- thresholds[[segment]]
     june_oct_idx <- 6:10
     
+    # Get point estimates
     seasonal_data <- sapply(june_oct_idx, function(i) {
       if (is.na(curdat[[segment]][i])) {
-        hisdat[[segment]][i]
+        NA
       } else {
         curdat[[segment]][i]
       }
     })
     
-    colors <- sapply(june_oct_idx, function(i) {
-      if (is.na(curdat[[segment]][i])) {
-        "#d9d9d9"  # Projected
-      } else {
-        "#1e806e"  # Actual
-      }
-    })
+    # Get uncertainty ranges (only for projected months)
+    error_bar_data <- mnest %>%
+      filter(subsegment == segment, Month %in% june_oct_idx) %>%
+      mutate(x = match(Month, june_oct_idx) - 1) %>%  # Convert to 0-based index
+      select(x, low = lo, high = hi) %>%
+      purrr::pmap(list) 
     
+    colors <- sapply(june_oct_idx, function(i) {
+      if (is.na(curdat[[segment]][i])) "#d9d9d9" else "#1e806e"
+    })
+
     highchart() %>%
       hc_chart(type = "column") %>%
       hc_xAxis(categories = month.abb[june_oct_idx]) %>%
@@ -399,8 +408,7 @@ server <- function(input, output, session) {
             width = 2,
             value = threshold,
             dashStyle = "Dash",
-            label = list(text = paste("Threshold:", threshold, "μg/L"), 
-                        style = list(color = "#d9534f", fontWeight = "bold"))
+            label = list(text = paste("Threshold:", threshold, "μg/L"))
           )
         )
       ) %>%
@@ -411,16 +419,22 @@ server <- function(input, output, session) {
         colors = colors,
         showInLegend = FALSE
       ) %>%
+      # Add error bars for projected months
+      hc_add_series(
+        type = "errorbar",
+        name = "Projections",
+        data = error_bar_data,
+        color = "#5c524f"
+      ) %>%
       hc_plotOptions(
-        column = list(
-          dataLabels = list(enabled = TRUE, format = "{y:.2f}")
-        )
+        column = list(dataLabels = list(enabled = TRUE, format = "{y:.1f}"))
       ) %>%
       hc_tooltip(
-        valueSuffix = " μg/L",
+        valueSuffix = " μg/L", 
         valueDecimals = 2
       ) %>%
       hc_credits(enabled = FALSE)
+
   })
   
   # CW Monthly plot
@@ -479,22 +493,26 @@ server <- function(input, output, session) {
     threshold <- thresholds[[segment]]
     june_oct_idx <- 6:10
     
+    # Get point estimates
     seasonal_data <- sapply(june_oct_idx, function(i) {
       if (is.na(curdat[[segment]][i])) {
-        hisdat[[segment]][i]
+        NA
       } else {
         curdat[[segment]][i]
       }
     })
     
-    colors <- sapply(june_oct_idx, function(i) {
-      if (is.na(curdat[[segment]][i])) {
-        "#d9d9d9"  # Projected
-      } else {
-        "#1e806e"  # Actual
-      }
-    })
+    # Get uncertainty ranges (only for projected months)
+    error_bar_data <- mnest %>%
+      filter(subsegment == segment, Month %in% june_oct_idx) %>%
+      mutate(x = match(Month, june_oct_idx) - 1) %>%  # Convert to 0-based index
+      select(x, low = lo, high = hi) %>%
+      purrr::pmap(list) 
     
+    colors <- sapply(june_oct_idx, function(i) {
+      if (is.na(curdat[[segment]][i])) "#d9d9d9" else "#1e806e"
+    })
+
     highchart() %>%
       hc_chart(type = "column") %>%
       hc_xAxis(categories = month.abb[june_oct_idx]) %>%
@@ -506,8 +524,7 @@ server <- function(input, output, session) {
             width = 2,
             value = threshold,
             dashStyle = "Dash",
-            label = list(text = paste("Threshold:", threshold, "μg/L"), 
-                        style = list(color = "#d9534f", fontWeight = "bold"))
+            label = list(text = paste("Threshold:", threshold, "μg/L"))
           )
         )
       ) %>%
@@ -518,17 +535,24 @@ server <- function(input, output, session) {
         colors = colors,
         showInLegend = FALSE
       ) %>%
+      # Add error bars for projected months
+      hc_add_series(
+        type = "errorbar",
+        name = "Projections",
+        data = error_bar_data,
+        color = "#5c524f"
+      ) %>%
       hc_plotOptions(
-        column = list(
-          dataLabels = list(enabled = TRUE, format = "{y:.2f}")
-        )
+        column = list(dataLabels = list(enabled = TRUE, format = "{y:.1f}"))
       ) %>%
       hc_tooltip(
-        valueSuffix = " μg/L",
+        valueSuffix = " μg/L", 
         valueDecimals = 2
       ) %>%
       hc_credits(enabled = FALSE)
+
   })
+
 }
 
 # Run the application

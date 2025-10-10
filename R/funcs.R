@@ -1,11 +1,7 @@
 datsum <- function(epcchl){
 
   subdat <- epcchl |> 
-    dplyr::filter(yr %in% c((max(yr) - 5):max(yr))) |> 
-    dplyr::summarise(
-      chla = mean(chla, na.rm = T), 
-      .by = c(subsegment, yr, Month)
-    )
+    dplyr::filter(yr %in% c((max(yr) - 5):max(yr)))
 
   hisdat <- subdat |> 
     dplyr::filter(yr < (max(yr))) |> 
