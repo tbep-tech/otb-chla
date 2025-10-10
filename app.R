@@ -323,7 +323,6 @@ server <- function(input, output, session) {
     
     # Prepare data
     actual_data <- curdat[[segment]]
-    projected_data <- ifelse(is.na(actual_data), hisdat[[segment]], NA)
     historical_data <- hisdat[[segment]]
     
     highchart() %>%
@@ -350,15 +349,7 @@ server <- function(input, output, session) {
         lineWidth = 3
       ) %>%
       hc_add_series(
-        name = "5-Yr Avg Projection",
-        data = projected_data,
-        color = "#d9d9d9",
-        dashStyle = "Dash",
-        marker = list(radius = 4),
-        lineWidth = 2
-      ) %>%
-      hc_add_series(
-        name = "Historical Avg",
+        name = "Prior 5-Yr Avg",
         data = historical_data,
         color = "#5c524f",
         dashStyle = "Dot",
@@ -368,6 +359,7 @@ server <- function(input, output, session) {
       hc_tooltip(
         shared = TRUE,
         valueSuffix = " μg/L",
+        valueDecimals = 2,
         crosshairs = TRUE
       ) %>%
       hc_legend(align = "center", verticalAlign = "bottom") %>%
@@ -421,10 +413,13 @@ server <- function(input, output, session) {
       ) %>%
       hc_plotOptions(
         column = list(
-          dataLabels = list(enabled = TRUE, format = "{y:.1f}")
+          dataLabels = list(enabled = TRUE, format = "{y:.2f}")
         )
       ) %>%
-      hc_tooltip(valueSuffix = " μg/L") %>%
+      hc_tooltip(
+        valueSuffix = " μg/L",
+        valueDecimals = 2
+      ) %>%
       hc_credits(enabled = FALSE)
   })
   
@@ -435,7 +430,6 @@ server <- function(input, output, session) {
     
     # Prepare data
     actual_data <- curdat[[segment]]
-    projected_data <- ifelse(is.na(actual_data), hisdat[[segment]], NA)
     historical_data <- hisdat[[segment]]
     
     highchart() %>%
@@ -462,15 +456,7 @@ server <- function(input, output, session) {
         lineWidth = 3
       ) %>%
       hc_add_series(
-        name = "5-Yr Avg Projection",
-        data = projected_data,
-        color = "#d9d9d9",
-        dashStyle = "Dash",
-        marker = list(radius = 4),
-        lineWidth = 2
-      ) %>%
-      hc_add_series(
-        name = "Historical Avg",
+        name = "Prior 5-Yr Avg",
         data = historical_data,
         color = "#5c524f",
         dashStyle = "Dot",
@@ -480,6 +466,7 @@ server <- function(input, output, session) {
       hc_tooltip(
         shared = TRUE,
         valueSuffix = " μg/L",
+        valueDecimals = 2,
         crosshairs = TRUE
       ) %>%
       hc_legend(align = "center", verticalAlign = "bottom") %>%
@@ -533,10 +520,13 @@ server <- function(input, output, session) {
       ) %>%
       hc_plotOptions(
         column = list(
-          dataLabels = list(enabled = TRUE, format = "{y:.1f}")
+          dataLabels = list(enabled = TRUE, format = "{y:.2f}")
         )
       ) %>%
-      hc_tooltip(valueSuffix = " μg/L") %>%
+      hc_tooltip(
+        valueSuffix = " μg/L",
+        valueDecimals = 2
+      ) %>%
       hc_credits(enabled = FALSE)
   })
 }
