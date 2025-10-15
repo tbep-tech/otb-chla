@@ -178,9 +178,18 @@ ui <- page_navbar(
         )
       )
     )
+  ),
+
+  # Navbar configuration
+  nav_spacer(),
+  nav_item(
+    tags$a(
+      href = "https://github.com/tbep-tech/otb-chla",
+      target = "_blank",
+      "Source Code"
+    )
   )
   
-
 )
 
 # Define server logic
